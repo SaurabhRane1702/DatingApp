@@ -1,0 +1,88 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using DatingApp.API.Data;
+using DatingApp.API.Dtos;
+using DatingApp.API.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+
+namespace DatingApp.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController] //if use Api Controller than string validation for null is handled, other wise we need to use model state
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthRepository _repo;
+        private readonly IConfiguration _config;
+
+        public AuthController(IAuthRepository repo, IConfiguration config)
+        {
+            _config = config;
+            _repo = repo;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        {
+            //validate the request
+
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+
+            if (await _repo.UserExists(userForRegisterDto.Username))
+                return BadRequest("Username Already Taken");
+
+            var userToCreate = new User
+            {
+                Username = userForRegisterDto.Username
+            };
+
+            var createUser = await _repo.Register(userToCreate, userForRegisterDto.password);
+
+            return StatusCode(201);
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        {
+            var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+
+            if (userFromRepo == null)
+                return Unauthorized();
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.Name,userFromRepo.Username)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.
+                        GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDesciptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDesciptor);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token)
+
+            });
+
+        }
+
+
+    }
+}
