@@ -62,13 +62,13 @@ namespace DatingApp.API.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Gemder")
+                    b.Property<string>("Gender")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Introduction")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("KnowAs")
+                    b.Property<string>("KnownAs")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastActive")
