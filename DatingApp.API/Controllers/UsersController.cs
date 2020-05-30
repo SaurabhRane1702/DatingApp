@@ -48,7 +48,7 @@ namespace DatingApp.API.Controllers
 
             _mapper.Map(userForUpdateDto, userFormRepo);
 
-            if (await _repo.SavAll())
+            if (await _repo.SaveAll())
                 return NoContent();
 
             throw new System.Exception($"Updating User {id} Failed on Save");
