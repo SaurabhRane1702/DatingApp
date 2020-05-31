@@ -31,6 +31,7 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 // import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxGalleryModule } from 'ngx-gallery-9';
 import { FileUploadModule } from 'ng2-file-upload';
+import { TimeagoModule } from 'ngx-timeago';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -60,6 +61,7 @@ export function tokenGetter() {
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TabsModule.forRoot(),
+    TimeagoModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     NgxGalleryModule,
     FileUploadModule,
