@@ -12,5 +12,6 @@ export interface User {
   interests?: string;
   introduction?: string;
   lookingFor?: string;
+  gender: string; // Added by saurabh to remove error
   photos?: Photo[];
 }
