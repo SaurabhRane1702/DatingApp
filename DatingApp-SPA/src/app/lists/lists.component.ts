@@ -1,11 +1,13 @@
+import { Pagination, PaginatedResult } from './../_models/pagination';
 import { AlertifyService } from './../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from './../_services/user.service';
 import { AuthService } from './../_services/auth.service';
-import {
-  Pagination,
-  PaginatedResult,
-} from './../../../../DatingApp.API/Models/Pagination';
+// import { PaginatedResult } from '../_models/pagination';
+// import {
+//   Pagination,
+//   PaginatedResult,
+// } from './../../../../DatingApp.API/Models/Pagination';
 import { User } from './../_models/user';
 import { Component, OnInit } from '@angular/core';
 
@@ -26,7 +28,14 @@ export class ListsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // this.route.data.subscribe((data) => {
+    //   console.log('fetching vaue from route = ' + data['users'].pagination);
+    //   this.users = data['users'].result;
+    //   this.pagination = data['users'].pagination;
+    //   console.log('NgOninit = ' + this.pagination);
+    // });
     this.route.data.subscribe((data) => {
+      console.log('fetching vaue from route = ' + data['users'].pagination);
       this.users = data['users'].result;
       this.pagination = data['users'].pagination;
     });
@@ -34,6 +43,7 @@ export class ListsComponent implements OnInit {
   }
 
   loadUsers() {
+    console.log(this.pagination);
     this.userService
       .getUsers(
         this.pagination.currentPage,
@@ -43,6 +53,8 @@ export class ListsComponent implements OnInit {
       )
       .subscribe(
         (res: PaginatedResult<User[]>) => {
+          console.log('Result= ' + res.result);
+          console.log('Pagination= ' + res.pagination);
           this.users = res.result;
           this.pagination = res.pagination;
         },

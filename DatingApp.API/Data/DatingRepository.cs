@@ -55,7 +55,7 @@ namespace DatingApp.API.Data
             // We no longer return at this stage and DEFFER
             // the exceution hence coomneting and righting new one
             // var users = await _context.Users.Include(p => p.Photos).ToListAsync();
-            var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable();
+            var users = _context.Users.OrderByDescending(u => u.LastActive).AsQueryable();
 
             users = users.Where(u => u.Id != userParams.UserId); //filtering out the current logged in user
 
@@ -65,12 +65,11 @@ namespace DatingApp.API.Data
             {
                 var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
                 users = users.Where(u => userLikers.Contains(u.Id));
-
             }
 
             if (userParams.Likees)
             {
-                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likees);
+                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
                 users = users.Where(u => userLikees.Contains(u.Id));
             }
 
@@ -100,8 +99,11 @@ namespace DatingApp.API.Data
 
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
-            var user = await _context.Users.Include(x => x.Likers).Include(x => x.Likees)
+            //Commented since not present in Neil's Code 
+            var user = await _context.Users.Include(user => user.Likers).Include(user => user.Likees)
             .FirstOrDefaultAsync(u => u.Id == id);
+
+            //var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if (likers)
             {

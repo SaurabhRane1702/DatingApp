@@ -1,5 +1,5 @@
 import { MessagesResolver } from './_resolvers/messages.resolver';
-import { ListResolver } from './_resolvers/lists.resolver';
+import { ListsResolver } from './_resolvers/lists.resolver';
 import { User } from './_models/user';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
@@ -48,7 +48,7 @@ export const appRoutes: Routes = [
       {
         path: 'lists',
         component: ListsComponent,
-        resolve: { User: ListResolver },
+        resolve: { User: ListsResolver },
       },
     ],
   },

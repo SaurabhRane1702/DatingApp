@@ -70,7 +70,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost("{id}/like/{recipentId}")]
-        public async Task<IActionResult> LikeUser([FromQuery] int id, int recipentId)
+        public async Task<IActionResult> LikeUser(int id, int recipentId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();

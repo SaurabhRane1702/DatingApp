@@ -44,6 +44,15 @@ export class UserService {
       params = params.append('gender', userParams.gender);
       params = params.append('orderBy', userParams.orderBy);
     }
+    console.log(
+      'user service getusers method LikesParam value = ' + likesParam
+    );
+    // console.log(
+    //   'user service getusers method UserParams value = ' +
+    //     userParams +
+    //     'Min Age= ' +
+    //     userParams.minAge
+    // );
 
     if (likesParam === 'Likers') {
       params = params.append('likers', 'true');
@@ -60,10 +69,26 @@ export class UserService {
       })
       .pipe(
         map((response) => {
+          console.log('user service response value =' + response.body);
           paginatedResult.result = response.body;
           if (response.headers.get('Pagination') != null) {
             paginatedResult.pagination = JSON.parse(
               response.headers.get('Pagination')
+            );
+            console.log(
+              'user service paginated result value = ' + paginatedResult.result
+            );
+            console.log(
+              'user service paginated result object current page value = ' +
+                paginatedResult.pagination.currentPage
+            );
+            console.log(
+              'user service paginated result object Items per page value = ' +
+                paginatedResult.pagination.itemsPerPage
+            );
+            console.log(
+              'user service paginated result object total items value = ' +
+                paginatedResult.pagination.totalItems
             );
           }
           return paginatedResult;
